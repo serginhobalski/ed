@@ -63,8 +63,12 @@
                     <!-- Authentication Links -->
                     @guest
                         @if (Route::has('login'))
-                            <a class="nav-item nav-link btn btn-primary" href="{{ route('login') }}">
-                                <i class="fa-solid fa-right-to-bracket"></i> {{ __('Logar no App') }} <i class="fa-solid fa-chalkboard-user"></i>
+                            <a class="nav-item nav-link btn btn-primary" href="{{ route('login') }}"
+                            title="Entrar no App Psicoped">
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                                {{-- {{ __('Entrar') }} --}}
+                                {{-- <i class="fa-solid fa-chalkboard-user"></i> --}}
+                                <img src="{{asset('src/assets/images/logo-white.png')}}" width="100px" alt="">
                             </a>
                             {{-- <a class="nav-item nav-link" href="#"></a>
                             <a class="nav-item nav-link btn btn-primary" href="{{ route('register') }}">

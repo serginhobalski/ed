@@ -46,7 +46,7 @@ Route::group(['prefix' => '/admin'], function(){
     Route::get('atendimentos', [AdminController::class, 'atendimentos']);
     Route::get('clientes', [AdminController::class, 'clientes']);
     Route::get('financeiro', [AdminController::class, 'financeiro']);
-    Route::get('painel', [AdminController::class, 'painel_adm']);
+    Route::get('painel', [AdminController::class, 'painel']);
     Route::get('perfil', [AdminController::class, 'perfil'])->name('admin.perfil');
     Route::get('detalhe_contato', [AdminController::class, 'detalhe_contato'])->name('detalhe_contato');
     Route::get('editar_contato', [AdminController::class, 'editar_contato'])->name('editar_contato');

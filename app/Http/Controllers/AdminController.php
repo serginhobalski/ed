@@ -50,7 +50,7 @@ class AdminController extends Controller {
             }
             return response()->json( $eventos );
         }
-        return view( 'adm.index', $data );
+        return view( 'admin.index', $data );
     }
 
     public function painel() {
@@ -88,7 +88,7 @@ class AdminController extends Controller {
             }
             return response()->json( $eventos );
         }
-        return view( 'adm.index', $data );
+        return view( 'admin.index', $data );
     }
 
     public function agenda_adm() {
@@ -124,7 +124,7 @@ class AdminController extends Controller {
             }
             return response()->json( $eventos );
         }
-        return view( 'adm.agenda', $data );
+        return view( 'admin.agenda', $data );
     }
 
     public function contatos_adm() {
@@ -160,7 +160,7 @@ class AdminController extends Controller {
             }
             return response()->json( $eventos );
         }
-        return view( 'adm.contatos', $data );
+        return view( 'admin.contatos', $data );
     }
 
     public function detalhe_contato( $id ) {
@@ -196,7 +196,7 @@ class AdminController extends Controller {
             }
             return response()->json( $eventos );
         }
-        return view( 'adm.detalhe_contato', $data );
+        return view( 'admin.detalhe_contato', $data );
     }
 
     public function editar_contato( $id ) {
@@ -232,7 +232,7 @@ class AdminController extends Controller {
             }
             return response()->json( $eventos );
         }
-        return view( 'adm.editar_contato', $data );
+        return view( 'admin.editar_contato', $data );
     }
 
     public function perfil( $id ) {
@@ -268,7 +268,7 @@ class AdminController extends Controller {
             }
             return response()->json( $eventos );
         }
-        return view( 'adm.perfil', $data );
+        return view( 'admin.perfil', $data );
     }
 
     public function agenda() {
@@ -304,7 +304,7 @@ class AdminController extends Controller {
             }
             return response()->json( $eventos );
         }
-        return view( 'adm.agenda', $data );
+        return view( 'admin.agenda', $data );
     }
 
     public function atendimentos() {
@@ -316,7 +316,7 @@ class AdminController extends Controller {
             'agendamentos' => Agenda::all(),
             'servicos' => Servico::all(),
         ];
-        return view( 'adm.atendimentos', $data );
+        return view( 'admin.atendimentos', $data );
     }
 
     public function clientes() {
@@ -328,7 +328,7 @@ class AdminController extends Controller {
             'agendamentos' => Agenda::all(),
             'servicos' => Servico::all(),
         ];
-        return view( 'adm.clientes', $data );
+        return view( 'admin.clientes', $data );
     }
 
     public function financeiro() {
@@ -340,7 +340,7 @@ class AdminController extends Controller {
             'agendamentos' => Agenda::all(),
             'servicos' => Servico::all(),
         ];
-        return view( 'adm.financeiro', $data );
+        return view( 'admin.financeiro', $data );
     }
 
     public function store_agenda( Request $request ) {
@@ -355,6 +355,6 @@ class AdminController extends Controller {
             'end' => [ 'required' ],
         ] );
         Agenda::create( $request->all() );
-        return redirect( 'adm/agenda' )->with( 'success', 'Evento cadastrado.' );
+        return redirect( 'admin/agenda' )->with( 'success', 'Evento cadastrado.' );
     }
 }
