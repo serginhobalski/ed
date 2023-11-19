@@ -197,12 +197,30 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
-						<a href="{{url('perfil')}}" class="ttr-material-button">
-							<span class="ttr-icon"><i class="fa fa-user-circle"></i></span>
-		                	<span class="ttr-label">Meu Perfil</span>
-		                </a>
-		            </li>
+                    @if (Auth::user()->group === 'admin')
+                        <li>
+                            <a href="{{url('admin/perfil')}}" class="ttr-material-button">
+                                <span class="ttr-icon"><i class="fa fa-user-circle"></i></span>
+                                <span class="ttr-label">Meu Perfil</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (Auth::user()->group === 'profissional')
+                        <li>
+                            <a href="{{url('prof/perfil')}}" class="ttr-material-button">
+                                <span class="ttr-icon"><i class="fa fa-user-circle"></i></span>
+                                <span class="ttr-label">Meu Perfil</span>
+                            </a>
+                        </li>
+                    @endif
+                    @if (Auth::user()->group === 'cliente')
+                        <li>
+                            <a href="{{url('usuario/perfil')}}" class="ttr-material-button">
+                                <span class="ttr-icon"><i class="fa fa-user-circle"></i></span>
+                                <span class="ttr-label">Meu Perfil</span>
+                            </a>
+                        </li>
+                    @endif
 				</ul>
 				<!-- sidebar menu end -->
 			</nav>

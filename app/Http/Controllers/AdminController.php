@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller {
+    public function __construct() {
+        $this->middleware( 'auth' );
+    }
+
     public function index() {
         $data = [
             'titulo' => 'Painel de  ' . Auth::user()->name,
@@ -46,10 +50,10 @@ class AdminController extends Controller {
             }
             return response()->json( $eventos );
         }
-        return view( 'admin.index', $data );
+        return view( 'adm.index', $data );
     }
 
-    public function painel_adm() {
+    public function painel() {
         $data = [
             'titulo' => 'Painel de  ' . Auth::user()->name,
             'slug' => 'painel-admin',
@@ -269,7 +273,7 @@ class AdminController extends Controller {
 
     public function agenda() {
         $data = [
-            'titulo' => 'Painel de  ' . Auth::user()->name,
+            'titulo' => 'Agenda de  ' . Auth::user()->name,
             'slug' => 'painel-admin',
             'usuarios' => User::all(),
             'contatos' => Contato::all(),
@@ -300,7 +304,43 @@ class AdminController extends Controller {
             }
             return response()->json( $eventos );
         }
-        return view( 'admin.agenda', $data );
+        return view( 'adm.agenda', $data );
+    }
+
+    public function atendimentos() {
+        $data = [
+            'titulo' => 'Atendimentos de  ' . Auth::user()->name,
+            'slug' => 'painel-admin',
+            'usuarios' => User::all(),
+            'contatos' => Contato::all(),
+            'agendamentos' => Agenda::all(),
+            'servicos' => Servico::all(),
+        ];
+        return view( 'adm.atendimentos', $data );
+    }
+
+    public function clientes() {
+        $data = [
+            'titulo' => 'Clientes de  ' . Auth::user()->name,
+            'slug' => 'clientes',
+            'usuarios' => User::all(),
+            'contatos' => Contato::all(),
+            'agendamentos' => Agenda::all(),
+            'servicos' => Servico::all(),
+        ];
+        return view( 'adm.clientes', $data );
+    }
+
+    public function financeiro() {
+        $data = [
+            'titulo' => 'Financeiro de  ' . Auth::user()->name,
+            'slug' => 'financeiro',
+            'usuarios' => User::all(),
+            'contatos' => Contato::all(),
+            'agendamentos' => Agenda::all(),
+            'servicos' => Servico::all(),
+        ];
+        return view( 'adm.financeiro', $data );
     }
 
     public function store_agenda( Request $request ) {
@@ -315,6 +355,6 @@ class AdminController extends Controller {
             'end' => [ 'required' ],
         ] );
         Agenda::create( $request->all() );
-        return redirect( 'admin/agenda' );
+        return redirect( 'adm/agenda' )->with( 'success', 'Evento cadastrado.' );
     }
 }

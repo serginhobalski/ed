@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('profissao');
-            $table->string('bio')->nullable();
+            $table->longText('bio')->nullable();
+            $table->string('telefone')->nullable();
+            $table->string('endereco')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
         });

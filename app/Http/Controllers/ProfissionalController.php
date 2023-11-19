@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Agenda;
+use App\Models\Prof;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class ProfissionalController extends Controller {
+    public function __construct() {
+        $this->middleware( 'auth' );
+    }
+
     public function painel() {
         $data = [
             'titulo' => 'Painel de  ' . Auth::user()->name,
@@ -41,7 +47,19 @@ class ProfissionalController extends Controller {
             }
             return response()->json( $eventos );
         }
-        return view( 'usuario.painel', $data );
+        return view( 'prof.painel', $data );
+    }
+
+    public function perfil() {
+        $user = Auth::user();
+        $data = [
+            'titulo' => 'Perfil de ' . $user->name,
+            'slug' => 'perfil',
+            'user' => $user,
+            'detalhe' => Prof::where( 'user_id', '=', $user->id )->first(),
+        ];
+        // dd( $data );
+        return view( 'perfil', $data );
     }
 
     public function create_agenda() {
@@ -76,4 +94,99 @@ class ProfissionalController extends Controller {
         $agenda->save();
         return redirect( 'prof' );
     }
+
+    public function clientes() {
+        $data = [
+            'titulo' => 'Clientes de  ' . Auth::user()->name,
+            'slug' => 'clientes',
+            'usuarios' => User::all(),
+        ];
+        return view( 'prof.clientes', $data );
+    }
+
+    public function atendimentos() {
+        $data = [
+            'titulo' => 'Atendimentos de  ' . Auth::user()->name,
+            'slug' => 'atendimentos',
+            'usuarios' => User::all(),
+        ];
+        return view( 'prof.atendimentos', $data );
+    }
+
+    public function agenda() {
+        $data = [
+            'titulo' => 'Agenda de  ' . Auth::user()->name,
+            'slug' => 'agenda',
+            'usuarios' => User::all(),
+        ];
+        return view( 'prof.agenda', $data );
+    }
+
+    public function financeiro() {
+        $data = [
+            'titulo' => 'Financeiro de  ' . Auth::user()->name,
+            'slug' => 'financeiro',
+            'usuarios' => User::all(),
+        ];
+        return view( 'prof.financeiro', $data );
+    }
+
+    public function update_perfil( Request $request, string $id ) {
+        $request->validate( [
+            'name' => [ 'required', 'string', 'max:255' ],
+            'surname' => [ 'nullable', 'string', 'max:255' ],
+            'username' => [ 'nullable', 'string', 'lowercase', 'max:255', 'unique:'.User::class ],
+            'email' => [ 'required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class ],
+        ] );
+        $usuario = User::find( $id );
+        $usuario->name = $request->name;
+        $usuario->surname = $request->surname;
+        $usuario->username = $request->username;
+        $usuario->email = $request->email;
+        $usuario->save();
+        return redirect( 'prof/perfil' )->with( 'success', 'Dados atualizados!' );
+    }
+
+    public function update_senha( Request $request, string $id ) {
+        $request->validate( [
+            'password' => [ 'required', 'string', 'max:255' ],
+        ] );
+        $usuario = User::find( $id );
+        $usuario->password = Hash::make( $request->password );
+        $usuario->save();
+        return redirect( 'profbio/pefil' )->with( 'success', 'Dados atualizados!' );
+    }
+
+    public function update_endereco( Request $request, string $id ) {
+        $request->validate( [
+            'telefone' => [ 'required', 'string' ],
+            'endereco' => [ 'required', 'string' ],
+        ] );
+        $endereco = Prof::find( $id );
+        $endereco->telefone = $request->telefone;
+        $endereco->endereco = $request->endereco;
+        $endereco->save();
+        return redirect( 'prof/perfil' )->with( 'success', 'Dados atualizados!' );
+    }
+
+    public function update_profissao( Request $request, string $id ) {
+        $request->validate( [
+            'profissao' => [ 'required', 'string' ],
+        ] );
+        $profissao = Prof::find( $id );
+        $profissao->profissao = $request->profissao;
+        $profissao->save();
+        return redirect( 'prof/perfil' )->with( 'success', 'Dados atualizados!' );
+    }
+
+    public function update_bio( Request $request, string $id ) {
+        $request->validate( [
+            'bio' => [ 'required', 'string' ],
+        ] );
+        $detalhes = Prof::find( $id );
+        $detalhes->bio = $request->bio;
+        $detalhes->save();
+        return redirect( 'prof/perfil' )->with( 'success', 'Dados atualizados!' );
+    }
+
 }

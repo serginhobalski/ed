@@ -38,6 +38,14 @@ class SiteController extends Controller {
         return view( 'site.app', $data );
     }
 
+    public function cadastro() {
+        $data = [
+            'titulo' => 'Cadastro',
+            'slug' => 'cadastro',
+        ];
+        return view( 'cadastro', $data );
+    }
+
     public function cadastrar( Request $request ) {
         // dd( $request );
         $request->validate( [
@@ -103,6 +111,106 @@ class SiteController extends Controller {
         return view( 'site.contato', $data );
     }
 
+    public function cad_cliente() {
+        $data = [
+            'titulo' => 'Cadastro Cliente',
+            'slug' => 'cadastrar',
+        ];
+        return view( 'cad_cliente', $data );
+    }
+
+    public function store_cliente( Request $request ) {
+        // dd( $request );
+        $request->validate( [
+            'name' => [ 'required', 'string' ],
+            'surname' => [ 'nullable', 'string', 'max:255' ],
+            'username' => [ 'nullable', 'lowercase', 'string', 'max:255', 'unique:'.User::class ],
+            'email' => [ 'required', 'lowercase', 'string', 'max:255', 'unique:'.User::class ],
+            // 'group' => [ 'required', 'string' ],
+            'telefone' => [ 'required', 'string' ],
+            'endereco' => [ 'required', 'string' ],
+            'cidade' => [ 'nullable', 'string' ],
+            'estado' => [ 'required', 'string' ],
+            'cep' => [ 'nullable', 'string' ],
+            'nascimento' => [ 'required', 'string' ],
+            'pai' => [ 'nullable', 'string' ],
+            'mae' => [ 'nullable', 'string' ],
+            'cpf' => [ 'nullable', 'string' ],
+            'rg' => [ 'nullable', 'string' ],
+            'detalhes' => [ 'nullable', 'string' ],
+        ] );
+        $usuario = new User();
+        $usuario->name = $request->name;
+        $usuario->surname = $request->surname;
+        $usuario->username = $request->username;
+        $usuario->email = $request->email;
+        // $usuario->group = $request->group;
+        $usuario->password = Hash::make( $request->password );
+        $usuario->save();
+
+        Auth::login( $usuario );
+
+        $detalhes = new Detalhe();
+        $detalhes->user_id = $usuario->id;
+        $detalhes->telefone = $request->telefone;
+        $detalhes->endereco = $request->endereco;
+        $detalhes->cidade = $request->cidade;
+        $detalhes->estado = $request->estado;
+        $detalhes->cep = $request->cep;
+        $detalhes->nascimento = $request->nascimento;
+        $detalhes->pai = $request->pai;
+        $detalhes->mae = $request->mae;
+        $detalhes->cpf = $request->cpf;
+        $detalhes->rg = $request->rg;
+        $detalhes->detalhes = $request->detalhes;
+        $detalhes->save();
+
+        return redirect()->route( 'usuario' )->with( 'success', 'Seja bem-vindo, ' . Auth::user()->name . '!' );
+    }
+
+    public function cad_profissional() {
+        $data = [
+            'titulo' => 'Cadastro Profissional',
+            'slug' => 'cadastrar',
+        ];
+        return view( 'cad_profissional', $data );
+    }
+
+    public function store_profissional( Request $request ) {
+        // dd( $request );
+        $request->validate( [
+            'name' => [ 'required', 'string' ],
+            'surname' => [ 'nullable', 'string', 'max:255' ],
+            'username' => [ 'nullable', 'lowercase', 'string', 'max:255', 'unique:'.User::class ],
+            'email' => [ 'required', 'lowercase', 'string', 'max:255', 'unique:'.User::class ],
+            'group' => [ 'required', 'string' ],
+            'profissao' => [ 'required', 'string' ],
+            'bio' => [ 'nullable', 'string' ],
+            'telefone' => [ 'required', 'string' ],
+            'endereco' => [ 'required', 'string' ],
+        ] );
+        $usuario = new User();
+        $usuario->name = $request->name;
+        $usuario->surname = $request->surname;
+        $usuario->username = $request->username;
+        $usuario->email = $request->email;
+        $usuario->group = $request->group;
+        $usuario->password = Hash::make( $request->password );
+        $usuario->save();
+
+        Auth::login( $usuario );
+
+        $prof = new Detalhe();
+        $prof->user_id = $usuario->id;
+        $prof->profissao = $request->profissao;
+        $prof->bio = $request->bio;
+        $prof->telefone = $request->telefone;
+        $prof->endereco = $request->endereco;
+        $prof->save();
+
+        return redirect()->route( 'prof' )->with( 'success', 'Seja bem-vindo, ' . Auth::user()->name . '!' );
+    }
+
     public function precos() {
         $data = [
             'titulo' => 'Precos',
@@ -135,75 +243,4 @@ class SiteController extends Controller {
         return view( 'site.sucesso', $data );
     }
 
-    public function update_perfil( Request $request, string $id ) {
-        $request->validate( [
-            'name' => [ 'required', 'string', 'max:255' ],
-            'surname' => [ 'nullable', 'string', 'max:255' ],
-            'username' => [ 'nullable', 'string', 'lowercase', 'max:255', 'unique:'.User::class ],
-            'email' => [ 'required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class ],
-        ] );
-        $usuario = User::find( $id );
-        $usuario->name = $request->name;
-        $usuario->surname = $request->surname;
-        $usuario->username = $request->username;
-        $usuario->email = $request->email;
-        $usuario->save();
-        return redirect( 'perfil' )->with( 'success', 'Dados atualizados!' );
-    }
-
-    public function update_senha( Request $request, string $id ) {
-        $request->validate( [
-            'password' => [ 'required', 'string', 'max:255' ],
-        ] );
-        $usuario = User::find( $id );
-        $usuario->password = Hash::make( $request->password );
-        $usuario->save();
-        return redirect( 'pefil' )->with( 'success', 'Dados atualizados!' );
-    }
-
-    public function update_endereco( Request $request, string $id ) {
-        $request->validate( [
-            'telefone' => [ 'required', 'string' ],
-            'endereco' => [ 'required', 'string' ],
-            'cidade' => [ 'nullable', 'string' ],
-            'estado' => [ 'required', 'string' ],
-            'cep' => [ 'nullable', 'string' ],
-        ] );
-        $endereco = Detalhe::find( $id );
-        $endereco->telefone = $request->telefone;
-        $endereco->endereco = $request->endereco;
-        $endereco->cidade = $request->cidade;
-        $endereco->estado = $request->estado;
-        $endereco->cep = $request->cep;
-        $endereco->save();
-        return redirect( 'perfil' )->with( 'success', 'Dados atualizados!' );
-    }
-
-    public function update_informacoes( Request $request, string $id ) {
-        $request->validate( [
-            'nascimento' => [ 'required', 'string' ],
-            'pai' => [ 'nullable', 'string' ],
-            'mae' => [ 'nullable', 'string' ],
-            'cpf' => [ 'nullable', 'string' ],
-            'rg' => [ 'nullable', 'string' ],
-        ] );
-        $informacoes = Detalhe::find( $id );
-        $informacoes->nascimento = $request->nascimento;
-        $informacoes->pai = $request->pai;
-        $informacoes->mae = $request->mae;
-        $informacoes->cpf = $request->cpf;
-        $informacoes->rg = $request->rg;
-        $informacoes->save();
-        return redirect( 'perfil' )->with( 'success', 'Dados atualizados!' );
-    }
-
-    public function update_detalhes( Request $request, string $id ) {
-        $request->validate( [
-            'nullable' => [ 'nullable', 'string' ],
-        ] );
-        $detalhes = Detalhe::find( $id );
-        $detalhes->detalhes = $request->detalhes;
-        $detalhes->save();
-        return redirect( 'perfil' )->with( 'success', 'Dados atualizados!' );
-    }
 }
